@@ -1,0 +1,37 @@
+import { NextApiRequest, NextApiResponse } from "next";
+
+import dotenv from "dotenv";
+import { createConnection } from "mysql2/promise";
+
+dotenv.config();
+
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    if (req.method === "POST") {
+        const { username, email, password } = req.body;
+
+        try {
+            const connection = await createConnection({
+              
+            });
+
+            await connection.query(
+                "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+                [username, email, password]
+            );
+
+            connection.end();
+
+            res.status(200).json({ message: "User added successfully!" });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({
+                message: "Failed to subscribe, please try again",
+            });
+        }
+    } else {
+        res.status(405).json({ message: "Method not allowed" });
+    }
+}
