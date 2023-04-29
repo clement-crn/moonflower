@@ -4,7 +4,9 @@ MoonFlower est un jeu de gestion que nous avons imaginé avec une partie de ma c
 Mon rôle est de m'occuper de l'intégralité du code.
 
 -système d'authentification avec hash des mots de passe vers la ddb mySQL (next route api + page front)
+
 -création de session avec un JsonWebToken sauvegardé dans les cookies
+
 -Affichage de l'username récupéré sur le cookie + bouton logout
 
 ## L'architecture mySQL
