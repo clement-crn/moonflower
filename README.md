@@ -1,8 +1,11 @@
 ## Présentation de la v1.0
 
--système d'authentification avec hash des mots de passe vers la ddb mySQL
+MoonFlower est un jeu de gestion que nous avons imaginé avec une partie de ma communauté discord.
+Mon rôle est de m'occuper de l'intégralité du code.
+
+-système d'authentification avec hash des mots de passe vers la ddb mySQL (next route api + page front)
 -création de session avec un JsonWebToken sauvegardé dans les cookies
--Affichage de l'username + bouton logout
+-Affichage de l'username récupéré sur le cookie + bouton logout
 
 ## L'architecture mySQL
 
