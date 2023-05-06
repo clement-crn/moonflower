@@ -11,7 +11,7 @@ Mon rôle est de m'occuper de l'intégralité du code.
 
 ## L'architecture mySQL
 
-![Capture d’écran 2023-04-30 à 21 43 49](https://user-images.githubusercontent.com/86530475/236632852-af09c2c3-c08d-4244-92cf-5151acdd1f6a.png)
+![Capture d’écran 2023-05-06 à 17 19 16](https://user-images.githubusercontent.com/86530475/236633118-b481c1dd-bbc1-406d-a900-27ea38289d63.png)
 
 ```
 CREATE TABLE users (
