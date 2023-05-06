@@ -20,9 +20,56 @@ email VARCHAR(255) NOT NULL,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE cards (
+    card_id INT AUTO_INCREMENT PRIMARY KEY,
+    level INT,
+    xp INT,
+    hp INT,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE shop (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    price INT NOT NULL,
+    quantity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE card_ownership (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    player_id INT NOT NULL,
+    card_id INT NOT NULL,
+    level INT NOT NULL,
+    hp INT NOT NULL,
+    xp INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 ```
 
 ## Lancer le projet
+
+Générer une clé privée pour la signature JWT:
+
+```
+//node.js
+const crypto = require('crypto');
+
+const jwtSecret = crypto.randomBytes(64).toString('hex');
+console.log(jwtSecret);
+
+```
+
+```
+node token.js
+```
 
 First, run the development server:
 

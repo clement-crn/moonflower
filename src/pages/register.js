@@ -1,23 +1,29 @@
-import { useState, useEffect } from "react";
-import { Form, Message } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
+import { Form, Message } from "semantic-ui-react";
 
-export default function Register() {
+function Register() {
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        const token = document.cookie.split("=")[1];
+        const token = document.cookie.replace(
+            /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+        );
+
         if (token) {
             const decoded = jwt.decode(token);
-            setUsername(decoded.username);
+            if (decoded && decoded.username) {
+                setUsername(decoded.username);
+            }
         }
     }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        const { username, email, password } = event.target.elements;
 
         try {
             const response = await fetch("/api/register", {
@@ -26,9 +32,9 @@ export default function Register() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    username,
-                    email,
-                    password,
+                    username: username.value,
+                    email: email.value,
+                    password: password.value,
                 }),
             });
 
@@ -36,37 +42,28 @@ export default function Register() {
             setMessage(data.message);
         } catch (error) {
             console.error(error);
-            setMessage("Veuillez reessayer");
+            setMessage("Veuillez réessayer");
         }
     };
 
     return (
-        <Form
-            onSubmit={handleSubmit}
-            success={message === "utilisateur ajouté"}
-            error={!!message && message !== "utilisateur ajouté"}
-        >
-            <Form.Input
-                label="Nouveau login"
-                type="text"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-            />
-            <Form.Input
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-            />
-            <Form.Input
-                label="Nouveau mot de passe"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-            />
-            <Message success header="Success" content={message} />
-            <Message error header="Error" content={message} />
-            <Form.Button>S'inscrire</Form.Button>
-        </Form>
+        <div>
+            <h1>Register Page</h1>
+            {username && <p>Username: {username}</p>}
+            <Form
+                onSubmit={handleSubmit}
+                success={message === "utilisateur ajouté!"}
+                error={!!message && message !== "utilisateur ajouté!"}
+            >
+                <Form.Input label="Username" type="text" name="username" />
+                <Form.Input label="Email" type="email" name="email" />
+                <Form.Input label="Password" type="password" name="password" />
+                <Message success header="Success" content={message} />
+                <Message error header="Error" content={message} />
+                <Form.Button>Register</Form.Button>
+            </Form>
+        </div>
     );
 }
+
+export default Register;

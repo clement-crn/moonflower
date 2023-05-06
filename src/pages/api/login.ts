@@ -26,7 +26,7 @@ export default async function login(
     
 
     const [result] = await connection.execute(
-      "SELECT id, username, password FROM users WHERE username = ?",
+      "SELECT user_id, username, password FROM users WHERE username = ?",
       [username]
     );
 
@@ -35,7 +35,9 @@ export default async function login(
 
       const match = await bcrypt.compare(password, user.password);
       if (match) {
-        const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
+        const token = jwt.sign(
+          { user_id: user.user_id, username: user.username },
+          process.env.JWT_SECRET, {
           expiresIn: "1h",
         });
         
