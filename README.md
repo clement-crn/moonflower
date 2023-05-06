@@ -3,11 +3,13 @@
 MoonFlower est un jeu de gestion que nous avons imaginé avec une partie de ma communauté discord.
 Mon rôle est de m'occuper de l'intégralité du code.
 
--système d'authentification avec hash des mots de passe vers la ddb mySQL (next route api + page front)
+Le joueur possède des personnages sont forme de cartes.
 
--création de session avec un JsonWebToken sauvegardé dans les cookies
+FEATURES v1
 
--Affichage de l'username récupéré sur le cookie + bouton logout
+-système d'authentification (register, login, logout) + sessions via mySQL
+
+-dashboard avec la liste des cartes du joueur
 
 ## L'architecture mySQL
 
