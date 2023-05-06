@@ -11,24 +11,29 @@ Mon rôle est de m'occuper de l'intégralité du code.
 
 ## L'architecture mySQL
 
+![Capture d’écran 2023-04-30 à 21 43 49](https://user-images.githubusercontent.com/86530475/236632852-af09c2c3-c08d-4244-92cf-5151acdd1f6a.png)
+
 ```
 CREATE TABLE users (
-id INT AUTO_INCREMENT PRIMARY KEY,
-username VARCHAR(50) NOT NULL,
-password VARCHAR(255) NOT NULL,
-email VARCHAR(255) NOT NULL,
-created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  session_id VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
 CREATE TABLE cards (
-    card_id INT AUTO_INCREMENT PRIMARY KEY,
-    level INT,
-    xp INT,
-    hp INT,
-    user_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(255) NOT NULL,
+  level INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
 
 CREATE TABLE shop (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -41,16 +46,7 @@ CREATE TABLE shop (
 );
 
 
-CREATE TABLE card_ownership (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    player_id INT NOT NULL,
-    card_id INT NOT NULL,
-    level INT NOT NULL,
-    hp INT NOT NULL,
-    xp INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+
 
 ```
 
