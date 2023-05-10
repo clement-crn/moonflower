@@ -18,16 +18,26 @@ export default async function cards(req, res) {
             database: process.env.DB_NAME,
         });
 
-        const [result] = await connection.execute(
-            "SELECT * FROM cards WHERE user_id = ?",
-            [userId]
-        );
+        // recup les cartes de l'user et son solde de moonflower selon UserId
+        const [cardsResult, balanceResult] = await Promise.all([
+            connection.execute("SELECT * FROM cards WHERE user_id = ?", [
+                userId,
+            ]),
+            connection.execute("SELECT balance FROM users WHERE user_id = ?", [
+                userId,
+            ]),
+        ]);
 
         connection.end();
 
-        return res.status(200).json({ cards: result });
+        const cards = cardsResult[0];
+        const balance = balanceResult[0][0].balance;
+
+        return res.status(200).json({ cards, balance });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Error retrieving cards" });
+        return res
+            .status(500)
+            .json({ message: "Error retrieving cards and balance" });
     }
 }

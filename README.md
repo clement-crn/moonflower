@@ -11,6 +11,8 @@ FEATURES v1
 
 -dashboard avec la liste des cartes du joueur
 
+-page shop (toujours en cours de build)
+
 ## L'architecture mySQL
 
 ![Capture d’écran 2023-05-06 à 17 19 16](https://user-images.githubusercontent.com/86530475/236633118-b481c1dd-bbc1-406d-a900-27ea38289d63.png)
