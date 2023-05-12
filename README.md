@@ -49,9 +49,6 @@ CREATE TABLE shop (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
-
-
 ```
 
 ## Lancer le projet
@@ -78,7 +75,7 @@ npm run dev
 # or
 yarn dev
 # or
-pnpm dev
+npm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+

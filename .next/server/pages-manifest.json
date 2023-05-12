@@ -2,7 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/shop": "pages/shop.js",
-  "/api/cards/[userId]": "pages/api/cards/[userId].js",
-  "/api/shop": "pages/api/shop.js"
+  "/api/shop": "pages/api/shop.js",
+  "/shop": "pages/shop.js"
 }

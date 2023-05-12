@@ -1,16 +1,15 @@
-
-
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { createConnection } from "mysql2/promise";
 import { config } from "dotenv";
 config();
 
-export default async function shop(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
+interface Card {
+  id: number;
+  name: string;
+  level: number;
+}
 
+export default async function shop(req: NextApiRequest, res: NextApiResponse) {
   try {
     const connection = await createConnection({
       host: process.env.DB_HOST,
@@ -19,7 +18,7 @@ export default async function shop(req: NextApiRequest, res: NextApiResponse) {
       database: process.env.DB_NAME,
     });
 
-    const [shopItems] = await connection.execute("SELECT * FROM shop");
+    const [shopItems] = await connection.execute<Card[]>("SELECT * FROM shop");
 
     connection.end();
 
@@ -31,4 +30,3 @@ export default async function shop(req: NextApiRequest, res: NextApiResponse) {
       .json({ message: "Error retrieving shop items", error: err });
   }
 }
-

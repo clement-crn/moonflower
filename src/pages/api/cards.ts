@@ -32,7 +32,7 @@ export default async function cards(req: NextApiRequest, res: NextApiResponse) {
     );
 
     connection.end();
-
+    console.log("Cards Data:", result); // Log the cards data
     return res.status(200).json({ cards: result });
   } catch (err) {
     console.error(err);
