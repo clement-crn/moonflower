@@ -7,9 +7,11 @@ Le joueur possède des personnages sont forme de cartes.
 
 FEATURES v1
 
--système d'authentification (register, login, logout) + sessions via mySQL
+-système d'authentification (register, login, logout) + sessions via mySQL.
 
--dashboard avec la liste des cartes du joueur
+-Lors de la creation du compte, un champion est donné pour démarrer. Si l'username est déjà pris, le compte ne peut être valide.
+
+-dashboard avec la liste des plantes du joueur
 
 -page shop (toujours en cours de build)
 
@@ -18,36 +20,57 @@ FEATURES v1
 ![Capture d’écran 2023-05-06 à 17 19 16](https://user-images.githubusercontent.com/86530475/236633118-b481c1dd-bbc1-406d-a900-27ea38289d63.png)
 
 ```
-CREATE TABLE users (
-  user_id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(50) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  session_id VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- Table "Items"
+CREATE TABLE Items (
+  item_id INT PRIMARY KEY AUTO_INCREMENT,
+  item_name VARCHAR(255) NOT NULL,
+  category VARCHAR(255) NOT NULL,
+  price INT NOT NULL
 );
 
-
-CREATE TABLE cards (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  user_id INT NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  type VARCHAR(255) NOT NULL,
+-- Table "Flower"
+CREATE TABLE Flower (
+  item_id INT PRIMARY KEY AUTO_INCREMENT,
+  item_name VARCHAR(255) NOT NULL,
+  hp INT NOT NULL,
+  xp INT NOT NULL,
   level INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  price INT NOT NULL
 );
 
 
-CREATE TABLE shop (
-    item_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    description VARCHAR(255) NOT NULL,
-    price INT NOT NULL,
-    quantity INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- Table "ShopInventory"
+CREATE TABLE ShopInventory (
+  shop_inventory_id INT PRIMARY KEY AUTO_INCREMENT,
+  item_id INT NOT NULL,
+  category VARCHAR(255) NOT NULL,
+  quantity INT NOT NULL,
+  FOREIGN KEY (item_id) REFERENCES Items(item_id)
 );
+
+-- Table "UserInventory"
+CREATE TABLE UserInventory (
+  user_inventory_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  item_id INT NOT NULL,
+  category VARCHAR(255) NOT NULL,
+  quantity INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES Users(user_id),
+  FOREIGN KEY (item_id) REFERENCES Items(item_id)
+);
+
+-- Table "Trade"
+CREATE TABLE Trade (
+  trade_id INT PRIMARY KEY AUTO_INCREMENT,
+  sender_id INT NOT NULL,
+  receiver_id INT NOT NULL,
+  item_id INT NOT NULL,
+  quantity INT NOT NULL,
+  FOREIGN KEY (sender_id) REFERENCES Users(user_id),
+  FOREIGN KEY (receiver_id) REFERENCES Users(user_id),
+  FOREIGN KEY (item_id) REFERENCES Items(item_id)
+);
+
 
 ```
 
@@ -77,5 +100,3 @@ yarn dev
 # or
 npm dev
 ```
-
-

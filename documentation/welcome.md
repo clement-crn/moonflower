@@ -1,6 +1,4 @@
-Ce document résume sans code le fonctionnement des pages
-
-
+Ce document résume le fonctionnement des pages
 
                       dashboard.js
 

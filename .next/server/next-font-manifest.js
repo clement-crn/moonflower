@@ -1,6 +1,6 @@
 self.__NEXT_FONT_MANIFEST={
   "pages": {
-    "/shop": []
+    "/_app": []
   },
   "app": {},
   "appUsingSizeAdjust": false,

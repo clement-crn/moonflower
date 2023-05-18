@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import Router from "next/router";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import jwt from "jsonwebtoken";
 import { Container, Header, Card, Button } from "semantic-ui-react";
-import "semantic-ui-css/semantic.min.css";
 import Link from "next/link";
 
 function Dashboard() {
     const [username, setUsername] = useState("");
     const [userId, setUserId] = useState("");
-    const [cards, setCards] = useState([]);
+    const [items, setItems] = useState([]);
     const [balance, setBalance] = useState(0);
+    const router = useRouter();
 
     function handleLogout() {
         fetch("/api/logout", {
@@ -22,14 +22,13 @@ function Dashboard() {
             .then((data) => {
                 document.cookie =
                     "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-                Router.push("/");
+                router.push("/");
             })
             .catch((error) => {
                 console.error("Error logging out:", error);
             });
     }
 
-    //déclanché qu'une fois car dependency = []
     useEffect(() => {
         const token = document.cookie.replace(
             /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
@@ -45,21 +44,39 @@ function Dashboard() {
         setUserId(userId);
     }, []);
 
-    //à chaque fois que userId change, on execute fetchCards
     useEffect(() => {
         if (userId) {
-            fetchCards(userId);
+            fetchItems(userId);
         }
     }, [userId]);
 
-    async function fetchCards(userId) {
+    async function fetchItems(userId) {
         try {
-            const response = await fetch(`/api/cards/${userId}`);
+            const response = await fetch(`/api/UserInventory/${userId}`);
             const data = await response.json();
-            setCards(data.cards);
+
+            const itemsWithCharacteristics = await Promise.all(
+                data.items.map(async (item) => {
+                    if (item.category === "flower") {
+                        const response = await fetch(
+                            `/api/flowerCharacteristics?item_id=${item.item_id}`
+                        );
+                        const flower = await response.json();
+                        console.log("Flower Characteristics:", flower);
+                        return {
+                            ...item,
+                            flower,
+                        };
+                    } else {
+                        return item;
+                    }
+                })
+            );
+
+            setItems(itemsWithCharacteristics);
             setBalance(data.balance);
         } catch (error) {
-            console.error("Error fetching cards:", error);
+            console.error("Error fetching items:", error);
         }
     }
 
@@ -68,7 +85,7 @@ function Dashboard() {
             /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
             "$1"
         );
-        Router.push(`/shop?token=${token}`);
+        router.push(`/shop?token=${token}`);
     }
 
     return (
@@ -85,39 +102,25 @@ function Dashboard() {
                     <Card.Meta>Numéro de compte: {userId}</Card.Meta>
                 </Card.Content>
             </Card>
-            <h3 style={{ marginTop: "2rem" }}>Plantes dans l'inventaire :</h3>
-            {cards && cards.length === 0 ? (
-                <p>Vous n'avez pas de plantes.</p>
-            ) : (
-                <Card.Group>
-                    {cards.map((card) => (
-                        <Card key={card.id}>
-                            <img
-                                src="https://semantic-ui.com/images/avatar2/large/matthew.png"
-                                wrapped
-                                ui={false}
-                            />
-                            <Card.Content>
-                                <Card.Header>{card.name}</Card.Header>
-                                <Card.Meta>
-                                    ID unique de la plante:{" "}
-                                    <span style={{ color: " #16dcc7 " }}>
-                                        {card.card_id}
-                                    </span>
-                                </Card.Meta>
-                                <Card.Description>
-                                    Niveau: {card.level}
-                                </Card.Description>
-                            </Card.Content>
-                        </Card>
-                    ))}
-                </Card.Group>
-            )}
-
+            <h3 style={{ marginTop: "2rem" }}>Objets dans l'inventaire :</h3>
+            {items.map((item) => {
+                if (item.category === "flower" && item.flower) {
+                    const flower = item.flower;
+                    return (
+                        <div key={item.user_inventory_id}>
+                            <h3>Item Name: {flower.item_name}</h3>
+                            <p>HP: {flower.hp}</p>
+                            <p>Level: {flower.level}</p>
+                            <p>XP: {flower.xp}</p>
+                        </div>
+                    );
+                } else {
+                    return null;
+                }
+            })}
             <div style={{ marginTop: "2rem" }}>
                 <h3>Solde moonflowers: {balance} MF</h3>
             </div>
-
             <div style={{ marginTop: "2rem" }}>
                 <Button className="ui button">
                     <Link href="/shop">Magasin</Link>

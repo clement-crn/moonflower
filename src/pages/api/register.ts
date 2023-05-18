@@ -18,15 +18,35 @@ export default async function handler(
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const connection = await createConnection({
-          host: process.env.DB_HOST,
-          user: process.env.DB_USER,
-          password: process.env.DB_PASSWORD,
-          database: process.env.DB_NAME,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
       });
 
+      // Check if the username is already taken
+      const [existingUser] = await connection.query(
+        "SELECT user_id FROM users WHERE username = ?",
+        [username]
+      );
+
+      if (existingUser.length > 0) {
+        connection.end();
+        return res.status(400).json({ message: "Ce nom d'utilisateur est déjà pris" });
+      }
+
+
+      const [insertUserResult] = await connection.query(
+        "INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, ?)",
+        [username, email, hashedPassword, 1000]
+      );
+
+      const userId = insertUserResult.insertId;
+
+      
       await connection.query(
-        "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-        [username, email, hashedPassword]
+        "INSERT INTO flowers (user_id, name, type, level) VALUES (?, ?, ?, ?)",
+        [userId, "Mauvaise herbe", "vert", 1]
       );
 
       connection.end();
@@ -42,4 +62,3 @@ export default async function handler(
     res.status(405).json({ message: "METHODE IMPOSSIBLE" });
   }
 }
-
