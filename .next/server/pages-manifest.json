@@ -3,8 +3,7 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/dashboard": "pages/dashboard.js",
-  "/shop": "pages/shop.js",
-  "/api/Shop/shopInventory": "pages/api/Shop/shopInventory.js",
   "/api/flowerCharacteristics": "pages/api/flowerCharacteristics.js",
+  "/": "pages/index.js",
   "/api/UserInventory/[userId]": "pages/api/UserInventory/[userId].js"
 }
